@@ -6,47 +6,46 @@ An e-ink family statusboard for a 7.3" Spectra 6 panel.
 I originally tested an immmich photo frame (EPF e-paper frame (https://github.com/jwchen119/EPF)), but my wife did not like photos on this e-ink display, so this project focuses on a practical statusboard view (weather, calendar, agenda) while keeping the immmich function as a backup.
 
 ## What It Does
-1. The `frame-server` runs a Flask app with:
-   - a web settings UI (`/setting`)
-   - control/status endpoints (`/download`, `/sleep`, `/mode`, `/battery`).
+- Turns a 7.3" Spectra 6 e-ink frame into a family dashboard with two modes:
+  - `statusboard` mode: weather + calendar + agenda + device info
+  - `immich` mode: photo frame fallback
 
-2. The frame periodically calls `/download`.
-   - Depending on the selected mode (`statusboard` or `immich`), the server generates the next image payload.
+- In `statusboard` mode, it shows:
+  - localized date/header
+  - current weather summary (icon, condition, temperature)
+  - sunrise/sunset time, moon phase, wind, precipitation probability and amount
+  - multi-day weather chart (temperature + precipitation, with day/night shading)
+  - monthly calendar with event markers
+    - `●` round: event
+    - `○` round outline: recurring event
+    - `■` square: all-day event
+    - `□` square outline: recurring all-day event
+    - `pot icon`: meal event
+  - agenda list with relative day labels (e.g. Today/Tomorrow) and configurable formatting
+  - footer info like last refresh and battery state
 
-3. In `statusboard` mode, the server fetches:
-   - weather data from OpenWeatherMap (OWM) or Deutscher Wetterdienst (DWD, over BrightSky API)
-   - calendar feeds (ICS),
-   - optional warning data (DWD alerts).
+- Supports two weather providers:
+  - OpenWeatherMap (OWM)
+  - Deutscher Wetterdienst (DWD) via BrightSky API (note that unrise/sunset times are calculared local in this mode (as DWD does not offer those) with the [National Oceanic and Atmospheric Administration (NOAA) solar algorithm](https://gml.noaa.gov/grad/solcalc/calcdetails.html))
 
-4. Calendar and agenda are rendered with different logic:
-   - **Calendar**: monthly grid with marker symbols (event, recurring, all-day, meals).
-   - **Agenda**: grouped day list with configurable labels (relative names, weekday format, date format).
-   - All-day and meal events stay visible for the full day; regular timed events disappear after they end.
+- Supports DWD warning markers:
+  - places warning icons next to affected values (min/max/precip/wind)
+  - falls back to current-temperature area when no specific target can be classified
 
-5. Weather summary behavior is configurable per metric:
-   - per-day (default) or next 24h scopes for min/max, precipitation probability, precipitation amount, wind, and sunshine.
-   - In DWD mode, sunrise/sunset times are calculared local with the [National Oceanic and Atmospheric Administration (NOAA) solar algorithm](https://gml.noaa.gov/grad/solcalc/calcdetails.html), with an optional OWM override (API Key needed then).
+- Lets you configure weather summary scopes per metric:
+  - current day (default, similar to BrightSky demo)
+  - or next 24 hours
 
-6. The weather chart is generated with Matplotlib (temperature + precipitation), then combined with the rest of the layout using Pillow.
-
-7. The final image is converted to EPF-compatible output (`image.c`) and returned to the frame.
-   - Home Assistant can control and monitor the system via `/mode`, `/battery`, and `/sleep`.
-
+- Exposes HTTP endpoints for frame integration and Home Assistant:
+  - `/download`, `/battery`, `/mode`, `/sleep`, `/setting`
+  
 ## How It Works
 
-1. Flask serves a settings UI and API endpoints.
+1. Flask serves a web settings UI and API endpoints.
 2. The frame requests `/download` and receives generated C-style pixel output (`image.c`).
 3. Weather + calendar data are fetched server-side.
 4. Rendering is done with Pillow + Matplotlib.
 5. Configuration is persisted in `/config/config.yaml`.
-
-## Calendar Marker Legend
-
-- `●` round: event
-- `○` round outline: recurring event
-- `■` square: all-day event
-- `□` square outline: recurring all-day event
-- `pot icon`: meal event
 
 ## Bill of Materials (BOM)
 
@@ -162,9 +161,9 @@ Original Project:
 Inspiration for Layout:
 - MagInkCal: [speedyg0nz/MagInkCal](https://github.com/speedyg0nz/MagInkCal)
 - Inkycal: [aceisace/Inkycal](https://github.com/aceisace/Inkycal)
-- Bright Sky (DWD API wrapper): [jdemaeyer/brightsky](https://github.com/jdemaeyer/brightsky) and [API docs](https://brightsky.dev/docs/)
 
-Font and Data:
+Resources:
+- Bright Sky (DWD API wrapper): [jdemaeyer/brightsky](https://github.com/jdemaeyer/brightsky) and [API docs](https://brightsky.dev/docs/)
 - Weather icons/font: [erikflowers/weather-icons](https://github.com/erikflowers/weather-icons)
 - Weather providers: [DWD](https://www.dwd.de/) and [OpenWeatherMap](https://openweathermap.org/)
 
