@@ -1,0 +1,69 @@
+mode: statusboard
+
+calendar:
+  feeds:
+    - name: Family
+      url: https://example.com/family.ics
+      color: yellow
+
+weather:
+  api_key: your_openweathermap_key
+  provider: dwd   # dwd or owm
+  latitude: 53.08
+  longitude: 8.81
+  temp_unit: celsius
+
+statusboard:
+  rotation: 0
+  dither_strength: 0.8
+  padding_left: 5
+  padding_right: 5
+  padding_top: 5
+  padding_bottom: 0
+  language: de
+  show_current_temp: true
+  show_suntime: true
+  show_dwd_warnings: true
+  dwd_use_owm_sun_times: false
+  color_conditions: true
+  summary_scope_temp: day
+  summary_scope_precip_prob: day
+  summary_scope_precip_rate: day
+  summary_scope_wind: day
+  summary_scope_sunshine: day
+  max_precip_mm: 6.0
+  diagram_auto_precip_max: true
+  diagram_display_hours: 72
+  diagram_include_past_hours: false
+  diagram_locale: true
+  diagram_night_shading: true
+  diagram_hour_markers: true
+  battery_show_below: 20
+  month_label_first_day: true
+  calendar_show_moon: true
+  agenda_relative_days: 2
+  agenda_weekday_format: dddd
+  agenda_date_format: DD.MM.YYYY
+  title_format: dddd, D. MMMM
+  last_updated_format: HH:mm
+  show_last_updated: true
+  show_weather_fallback_info: true
+  show_dwd_warning_near_value: true
+
+display:
+  mode: fill
+
+immich:
+  url: http://immich:2283
+  album: YOUR_ALBUM_NAME
+  rotation: 270
+  enhanced: 1.5
+  contrast: 1.0
+  strength: 0.8
+  display_mode: fill
+  image_order: random
+  sleep_start_hour: 23
+  sleep_start_minute: 0
+  sleep_end_hour: 6
+  sleep_end_minute: 0
+  wakeup_interval: 60
