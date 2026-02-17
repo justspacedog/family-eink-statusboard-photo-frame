@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frame Settings</title>
+    <style>
+        :root {
+            --primary-color: #4361EE;
+            --primary-light: #4895EF;
+            --accent-color: #3F37C9;
+            --error-color: #e63946;
+            --success-color: #2a9d8f;
+            --text-color: #2b2d42;
+            --text-light: #8d99ae;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            font-weight: 500;
+            font-size: 1.8rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 1.2rem;
+            font-weight: 500;
+        }
+
+        .card.compact {
+            padding: 1.5rem 2rem;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0.75rem 0 0.5rem;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: #e9ecef;
+            margin: 1rem 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input[type="text"]:focus,
+        select:focus {
+            border-color: var(--primary-light);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+
+        .small-text {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .slider-container input[type="range"] {
+            flex-grow: 1;
+            height: 6px;
+            -webkit-appearance: none;
+            background: #eee;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .slider-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .slider-container input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        .slider-value {
+            background-color: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .error {
+            color: var(--error-color);
+            background-color: rgba(230, 57, 70, 0.1);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        button,
+        input[type="submit"] {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        button:hover,
+        input[type="submit"]:hover {
+            background-color: var(--accent-color);
+        }
+
+        .reset-btn {
+            background-color: #f8f9fa;
+            color: var(--text-color);
+            border: 1px solid #ddd;
+        }
+
+        .reset-btn:hover {
+            background-color: #e9ecef;
+            color: var(--text-color);
+        }
+
+        .confirm-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .confirm-content {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .confirm-content h2 {
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .confirm-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .confirm-content button {
+            padding: 0.7rem 1.2rem;
+            margin: 0 0.5rem;
+        }
+
+        #notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--success-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            display: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        #notification.show {
+            opacity: 1;
+        }
+
+        .time-input {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .time-input select {
+            width: 70px;
+            padding: 0.6rem;
+        }
+
+        .battery-title {
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .battery-charge {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .battery-bar {
+            width: 100%;
+            height: 16px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .battery-level {
+            height: 100%;
+            background-color: #ff6347;
+            /* Tomato red color as shown in image */
+            border-radius: 8px;
+            transition: width 1s ease;
+        }
+
+        .battery-level.high,
+        .battery-level.medium,
+        .battery-level.low,
+        .battery-level.critical {
+            background-color: #ff6347;
+            animation: none;
+        }
+
+        .section-divider {
+            height: 1px;
+            background-color: #eee;
+            margin: 2rem 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            header h1 {
+                padding: 0 1rem;
+                font-size: 1.5rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button,
+            input[type="submit"] {
+                width: 100%;
+            }
+
+            .time-input {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="notification"></div>
+
+    <header>
+        <h1>Frame Settings</h1>
+    </header>
+
+    <div class="container">
+        {% if error %}
+        <div class="error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <div class="card compact">
+            <div class="battery-info">
+                <div class="section-title">Battery</div>
+                <p class="battery-charge">Charge Level: {{ "%.2f"|format(battery_percentage) }}%</p>
+                <div class="battery-bar">
+                    <div id="batteryLevel" class="battery-level" style="width: {{ battery_percentage }}%"></div>
+                </div>
+            </div>
+            <div class="section-divider"></div>
+            <div class="form-group" style="margin-top:0;">
+                <div class="section-title">Power Management</div>
+                <label for="sleep_time">Sleep Time Range:</label>
+                <div class="time-input">
+                    <select id="sleep_start_hour" name="sleep_start_hour">
+                        {% for hour in range(24) %}
+                        <option value="{{ hour }}" {% if config['immich']['sleep_start_hour']==hour %}selected{% endif %}>
+                            {{ '%02d'|format(hour) }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    :
+                    <select id="sleep_start_minute" name="sleep_start_minute">
+                        {% for minute in range(0, 60, 1) %}
+                        <option value="{{ minute }}" {% if config['immich']['sleep_start_minute']==minute %}selected{% endif %}>
+                            {{ '%02d'|format(minute) }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <span style="margin: 0 10px;">to</span>
+                    <select id="sleep_end_hour" name="sleep_end_hour">
+                        {% for hour in range(24) %}
+                        <option value="{{ hour }}" {% if config['immich']['sleep_end_hour']==hour %}selected{% endif %}>
+                            {{ '%02d'|format(hour) }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    :
+                    <select id="sleep_end_minute" name="sleep_end_minute">
+                        {% for minute in range(0, 60, 1) %}
+                        <option value="{{ minute }}" {% if config['immich']['sleep_end_minute']==minute %}selected{% endif %}>
+                            {{ '%02d'|format(minute) }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="small-text">Device will not wake up during this time period</div>
+            </div>
+
+            <div class="form-group">
+                <label for="wakeup_interval">Wake Up Interval (Outside Sleep Time):</label>
+                <select id="wakeup_interval" name="wakeup_interval">
+                    <option value="30" {% if config['immich']['wakeup_interval']==30 %}selected{% endif %}>30 minutes</option>
+                    <option value="60" {% if config['immich']['wakeup_interval']==60 %}selected{% endif %}>1 hour</option>
+                    <option value="120" {% if config['immich']['wakeup_interval']==120 %}selected{% endif %}>2 hours</option>
+                    <option value="180" {% if config['immich']['wakeup_interval']==180 %}selected{% endif %}>3 hours</option>
+                    <option value="240" {% if config['immich']['wakeup_interval']==240 %}selected{% endif %}>4 hours</option>
+                    <option value="360" {% if config['immich']['wakeup_interval']==360 %}selected{% endif %}>6 hours</option>
+                    <option value="480" {% if config['immich']['wakeup_interval']==480 %}selected{% endif %}>8 hours</option>
+                    <option value="720" {% if config['immich']['wakeup_interval']==720 %}selected{% endif %}>12 hours</option>
+                    <option value="1440" {% if config['immich']['wakeup_interval']==1440 %}selected{% endif %}>24 hours</option>
+                </select>
+            </div>
+
+            <div class="section-divider"></div>
+            <div class="form-group" style="margin-top:0;">
+                <div class="section-title">Mode</div>
+                <div class="button-group" style="justify-content:center;">
+                    <button type="button" id="btnStatus" class="reset-btn">Statusboard</button>
+                    <button type="button" id="btnImmich" class="reset-btn">Immich</button>
+                </div>
+            </div>
+        </div>
+
+        <form id="settingsForm" method="POST" onsubmit="handleSubmit(event)">
+            <input type="hidden" id="mode" name="mode" value="{{ config.get('mode','statusboard') }}">
+
+            <div class="card section-immich">
+                <h2 class="card-title">Server Connection</h2>
+                <div class="form-group">
+                    <label for="url">Immich Server URL:</label>
+                    <input type="text" id="url" name="url" value="{{ config['immich']['url'] }}"
+                        placeholder="http://localhost" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="album">Album Name:</label>
+                    <input type="text" id="album" name="album" value="{{ config['immich']['album'] }}"
+                        placeholder="default_album" required>
+                </div>
+            </div>
+
+            <div class="card section-immich">
+                <h2 class="card-title">Display Settings</h2>
+                <div class="form-group">
+                    <label for="rotation">Image Rotation:</label>
+                    <select id="rotation" name="rotation">
+                        <option value="0" {% if config['immich']['rotation']==0 %}selected{% endif %}>0 degrees</option>
+                        <option value="90" {% if config['immich']['rotation']==90 %}selected{% endif %}>90 degrees
+                        </option>
+                        <option value="180" {% if config['immich']['rotation']==180 %}selected{% endif %}>180 degrees
+                        </option>
+                        <option value="270" {% if config['immich']['rotation']==270 %}selected{% endif %}>270 degrees
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="display_mode">Display Mode:</label>
+                    <select id="display_mode" name="display_mode">
+                        <option value="fit" {% if config['immich']['display_mode']=='fit' %}selected{% endif %}>Fit
+                            Width
+                        </option>
+                        <option value="fill" {% if config['immich']['display_mode']=='fill' %}selected{% endif %}>Fill
+                            Screen
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="image_order">Image Display Order:</label>
+                    <select id="image_order" name="image_order">
+                        <option value="random" {% if config['immich']['image_order']=='random' %}selected{% endif %}>
+                            Random</option>
+                        <option value="newest" {% if config['immich']['image_order']=='newest' %}selected{% endif %}>
+                            Newest First</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card section-immich">
+                <h2 class="card-title">Image Enhancement</h2>
+                <div class="form-group">
+                    <label for="enhanced">Color Enhancement:</label>
+                    <div class="slider-container">
+                        <input type="range" id="enhanced" name="enhanced" min="0.0" max="2.0" step="0.1"
+                            value="{{ config['immich']['enhanced']|default('1.0') }}" oninput="updateSliderValue(this)">
+                        <output class="slider-value">{{ config['immich']['enhanced']|default('1.0') }}</output>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="contrast">Contrast:</label>
+                    <div class="slider-container">
+                        <input type="range" id="contrast" name="contrast" min="0.0" max="2.0" step="0.1"
+                            value="{{ config['immich']['contrast']|default('1.0') }}" oninput="updateSliderValue(this)">
+                        <output class="slider-value">{{ config['immich']['contrast']|default('1.0') }}</output>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="strength">Dithering Strength:</label>
+                    <div class="slider-container">
+                        <input type="range" id="strength" name="strength" min="0.0" max="1.0" step="0.1"
+                            value="{{ config['immich']['strength']|default('0.8') }}" oninput="updateSliderValue(this)">
+                        <output class="slider-value">{{ config['immich']['strength']|default('0.8') }}</output>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card section-statusboard">
+                <h2 class="card-title">General Settings</h2>
+                <div class="form-group">
+                    <label for="statusboard_language">Language</label>
+                    <select id="statusboard_language" name="statusboard_language">
+                        <option value="de" {% if config.get('statusboard', {}).get('language','de')=='de' %}selected{% endif %}>Deutsch</option>
+                        <option value="en" {% if config.get('statusboard', {}).get('language','de')=='en' %}selected{% endif %}>English</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="statusboard_rotation">Rotation</label>
+                    <select id="statusboard_rotation" name="statusboard_rotation">
+                        <option value="0" {% if config.get('statusboard', {}).get('rotation',0)==0 %}selected{% endif %}>0°</option>
+                        <option value="180" {% if config.get('statusboard', {}).get('rotation',0)==180 %}selected{% endif %}>180°</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="statusboard_title_format">Title Format</label>
+                    <input type="text" id="statusboard_title_format" name="statusboard_title_format"
+                        value="{{ config.get('statusboard', {}).get('title_format','dddd, D. MMMM') }}">
+                    <div class="small-text">Arrow format, e.g. dddd, D. MMMM</div>
+                </div>
+                <div class="form-group">
+                    <label for="statusboard_padding_top">Padding Top (px)</label>
+                    <input type="number" id="statusboard_padding_top" name="statusboard_padding_top" min="0" max="40"
+                        value="{{ config.get('statusboard', {}).get('padding_top',5) }}">
+                </div>
+                <div class="form-group">
+                    <label for="statusboard_padding_bottom">Padding Bottom (px)</label>
+                    <input type="number" id="statusboard_padding_bottom" name="statusboard_padding_bottom" min="0" max="40"
+                        value="{{ config.get('statusboard', {}).get('padding_bottom',0) }}">
+                </div>
+                <div class="form-group">
+                    <label for="statusboard_padding_left">Padding Left (px)</label>
+                    <input type="number" id="statusboard_padding_left" name="statusboard_padding_left" min="0" max="40"
+                        value="{{ config.get('statusboard', {}).get('padding_left',5) }}">
+                </div>
+                <div class="form-group">
+                    <label for="statusboard_padding_right">Padding Right (px)</label>
+                    <input type="number" id="statusboard_padding_right" name="statusboard_padding_right" min="0" max="40"
+                        value="{{ config.get('statusboard', {}).get('padding_right',5) }}">
+                </div>
+                <div class="form-group">
+                    <label for="statusboard_dither_strength">Dithering Strength</label>
+                    <div class="slider-container">
+                        <input type="range" id="statusboard_dither_strength" name="statusboard_dither_strength" min="0.0" max="1.0" step="0.1"
+                            value="{{ config.get('statusboard', {}).get('dither_strength',0.8) }}" oninput="updateSliderValue(this)">
+                        <output class="slider-value">{{ config.get('statusboard', {}).get('dither_strength',0.8) }}</output>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card section-statusboard">
+                <h2 class="card-title">Weather Settings</h2>
+                <div class="form-group">
+                    <label for="weather_provider">Provider</label>
+                    <select id="weather_provider" name="weather_provider">
+                        <option value="owm" {% if config.get('weather', {}).get('provider','owm')=='owm' %}selected{% endif %}>OpenWeatherMap (OWM)</option>
+                        <option value="dwd" {% if config.get('weather', {}).get('provider','owm')=='dwd' %}selected{% endif %}>Deutscher Wetterdienst (DWD, over BrightSky API)</option>
+                    </select>
+                    <div class="small-text">OWM mode requires an OpenWeatherMap API key. DWD mode works without an OWM key.</div>
+                    <div class="small-text">DWD-only options are shown only when provider is set to DWD.</div>
+                </div>
+                <div class="form-group">
+                    <label for="weather_lat">Latitude</label>
+                    <input type="text" id="weather_lat" name="weather_lat" value="{{ config.get('weather', {}).get('latitude','') }}">
+                </div>
+                <div class="form-group">
+                    <label for="weather_lon">Longitude</label>
+                    <input type="text" id="weather_lon" name="weather_lon" value="{{ config.get('weather', {}).get('longitude','') }}">
+                </div>
+                <div class="form-group">
+                    <label for="weather_temp_unit">Temperature Unit</label>
+                    <select id="weather_temp_unit" name="weather_temp_unit">
+                        <option value="celsius" {% if config.get('weather', {}).get('temp_unit','celsius')=='celsius' %}selected{% endif %}>Celsius</option>
+                        <option value="fahrenheit" {% if config.get('weather', {}).get('temp_unit','celsius')=='fahrenheit' %}selected{% endif %}>Fahrenheit</option>
+                    </select>
+                </div>
+
+                <div class="section-divider"></div>
+                <h3 style="margin:8px 0 6px 0;">Current Conditions</h3>
+                <div class="form-group">
+                    <label><input type="checkbox" id="statusboard_show_current_temp" name="statusboard_show_current_temp"
+                        {% if config.get('statusboard', {}).get('show_current_temp', True) %}checked{% endif %}> Show current temperature</label>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="statusboard_color_conditions" name="statusboard_color_conditions"
+                        {% if config.get('statusboard', {}).get('color_conditions', True) %}checked{% endif %}> Color conditions and icons</label>
+                </div>
+                <div class="form-group dwd-only-setting">
+                    <label><input type="checkbox" id="statusboard_show_suntime" name="statusboard_show_suntime"
+                        {% if config.get('statusboard', {}).get('show_suntime', True) %}checked{% endif %}> Show sunshine hours in sunrise line (DWD only)</label>
+                </div>
+                <div class="form-group dwd-only-setting">
+                    <label><input type="checkbox" id="statusboard_show_dwd_warnings" name="statusboard_show_dwd_warnings"
+                        {% if config.get('statusboard', {}).get('show_dwd_warnings', True) %}checked{% endif %}> Show weather warning icon next to temperature (DWD only)</label>
+                </div>
+                <div class="form-group dwd-only-setting">
+                    <label><input type="checkbox" id="statusboard_show_dwd_warning_near_value" name="statusboard_show_dwd_warning_near_value"
+                        {% if config.get('statusboard', {}).get('show_dwd_warning_near_value', True) %}checked{% endif %}> Show warning icon next to affected value (DWD only)</label>
+                </div>
+                <div class="form-group dwd-only-setting">
+                    <label><input type="checkbox" id="statusboard_dwd_use_owm_sun_times" name="statusboard_dwd_use_owm_sun_times"
+                        {% if config.get('statusboard', {}).get('dwd_use_owm_sun_times', False) %}checked{% endif %}> Use OWM for sunrise/sunset in DWD mode</label>
+                    <div class="small-text">Default OFF (recommended): sunrise/sunset are calculated locally on this server from location and date using the National Oceanic and Atmospheric Administration (NOAA) solar algorithm (no NOAA API/network call).</div>
+                </div>
+                <div class="section-divider"></div>
+                <h3 style="margin:8px 0 6px 0;">Summary Value Scope</h3>
+                <div class="form-group">
+                    <label for="statusboard_summary_scope_temp">Min/Max Temperature Scope</label>
+                    <select id="statusboard_summary_scope_temp" name="statusboard_summary_scope_temp">
+                        <option value="day" {% if config.get('statusboard', {}).get('summary_scope_temp','day')=='day' %}selected{% endif %}>Current day</option>
+                        <option value="24h" {% if config.get('statusboard', {}).get('summary_scope_temp','day')=='24h' %}selected{% endif %}>Next 24h</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="statusboard_summary_scope_precip_prob">Precipitation Probability Scope</label>
+                    <select id="statusboard_summary_scope_precip_prob" name="statusboard_summary_scope_precip_prob">
+                        <option value="day" {% if config.get('statusboard', {}).get('summary_scope_precip_prob','day')=='day' %}selected{% endif %}>Current day</option>
+                        <option value="24h" {% if config.get('statusboard', {}).get('summary_scope_precip_prob','day')=='24h' %}selected{% endif %}>Next 24h</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="statusboard_summary_scope_precip_rate">Precipitation Amount (mm/h) Scope</label>
+                    <select id="statusboard_summary_scope_precip_rate" name="statusboard_summary_scope_precip_rate">
+                        <option value="day" {% if config.get('statusboard', {}).get('summary_scope_precip_rate','day')=='day' %}selected{% endif %}>Current day</option>
+                        <option value="24h" {% if config.get('statusboard', {}).get('summary_scope_precip_rate','day')=='24h' %}selected{% endif %}>Next 24h</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="statusboard_summary_scope_wind">Wind Scope</label>
+                    <select id="statusboard_summary_scope_wind" name="statusboard_summary_scope_wind">
+                        <option value="day" {% if config.get('statusboard', {}).get('summary_scope_wind','day')=='day' %}selected{% endif %}>Current day</option>
+                        <option value="24h" {% if config.get('statusboard', {}).get('summary_scope_wind','day')=='24h' %}selected{% endif %}>Next 24h</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="statusboard_summary_scope_sunshine">Sunshine Duration Scope</label>
+                    <select id="statusboard_summary_scope_sunshine" name="statusboard_summary_scope_sunshine">
+                        <option value="day" {% if config.get('statusboard', {}).get('summary_scope_sunshine','day')=='day' %}selected{% endif %}>Current day</option>
+                        <option value="24h" {% if config.get('statusboard', {}).get('summary_scope_sunshine','day')=='24h' %}selected{% endif %}>Next 24h</option>
+                    </select>
+                </div>
+
+                <div class="section-divider"></div>
+                <h3 style="margin:8px 0 6px 0;">Diagram Settings</h3>
+                <div class="form-group">
+                    <label><input type="checkbox" id="statusboard_diagram_auto_precip_max" name="statusboard_diagram_auto_precip_max"
+                        {% if config.get('statusboard', {}).get('diagram_auto_precip_max', True) %}checked{% endif %}> Auto-scale precipitation axis max</label>
+                </div>
+                <div class="form-group">
+                    <label for="statusboard_diagram_display_hours">Diagram Display Hours</label>
+                    <input type="number" id="statusboard_diagram_display_hours" name="statusboard_diagram_display_hours" min="6" max="240" step="1"
+                        value="{{ config.get('statusboard', {}).get('diagram_display_hours',72) }}">
+                    <div class="small-text">Max with current provider data: OWM up to 120h, DWD up to ~240h.</div>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="statusboard_diagram_include_past_hours" name="statusboard_diagram_include_past_hours"
+                        {% if config.get('statusboard', {}).get('diagram_include_past_hours', False) %}checked{% endif %}> Include already passed hours</label>
+                </div>
+                <div class="form-group">
+                    <label for="statusboard_max_precip_mm">Diagram Precipitation Max (mm)</label>
+                    <input type="number" id="statusboard_max_precip_mm" name="statusboard_max_precip_mm" min="1" max="20" step="0.5"
+                        value="{{ config.get('statusboard', {}).get('max_precip_mm',5.0) }}">
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="statusboard_diagram_night_shading" name="statusboard_diagram_night_shading"
+                        {% if config.get('statusboard', {}).get('diagram_night_shading', True) %}checked{% endif %}> Night shading in diagram</label>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="statusboard_diagram_hour_markers" name="statusboard_diagram_hour_markers"
+                        {% if config.get('statusboard', {}).get('diagram_hour_markers', True) %}checked{% endif %}> Show 6/12/18 labels under weekdays</label>
+                </div>
+            </div>
+
+            <div class="card section-statusboard">
+                <h2 class="card-title">Calendar Settings</h2>
+                <h3 style="margin:8px 0 6px 0;">Feeds</h3>
+                <div class="form-group">
+                    <table style="width:100%; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left; padding:6px;">Name</th>
+                                <th style="text-align:left; padding:6px;">URL</th>
+                                <th style="text-align:left; padding:6px;">Color</th>
+                                <th style="text-align:left; padding:6px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="calendarRows">
+                            {% for feed in config.get('calendar', {}).get('feeds', []) %}
+                            <tr>
+                                <td style="padding:6px;"><input type="text" name="calendar_name[]" value="{{ feed.name if feed.name is defined else feed['name'] }}" /></td>
+                                <td style="padding:6px;"><input type="text" name="calendar_url[]" value="{{ feed.url if feed.url is defined else feed['url'] }}" /></td>
+                                <td style="padding:6px;">
+                                    <select name="calendar_color[]">
+                                        {% for c in ['black','red','blue','green','yellow','orange','gray','meals'] %}
+                                        <option value="{{ c }}" {% if (feed.color if feed.color is defined else feed['color']) == c %}selected{% endif %}>{{ c }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td style="padding:6px;"><button type="button" class="reset-btn" onclick="removeRow(this)">-</button></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div style="margin-top:10px;">
+                        <button type="button" class="reset-btn" onclick="addRow()">+</button>
+                    </div>
+                </div>
+                <div class="section-divider"></div>
+                <h3 style="margin:8px 0 6px 0;">Display</h3>
+                <div class="form-group">
+                    <label><input type="checkbox" id="statusboard_month_label_first_day" name="statusboard_month_label_first_day"
+                        {% if config.get('statusboard', {}).get('month_label_first_day', True) %}checked{% endif %}> Show month on first day</label>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="statusboard_calendar_show_moon" name="statusboard_calendar_show_moon"
+                        {% if config.get('statusboard', {}).get('calendar_show_moon', True) %}checked{% endif %}> Show moon phase in calendar cells</label>
+                </div>
+                <div class="section-divider"></div>
+                <h3 style="margin:8px 0 6px 0;">Agenda</h3>
+                <div class="form-group">
+                    <label for="statusboard_agenda_relative_days">Relative day labels count (e.g. Today, Tomorrow)</label>
+                    <input type="number" id="statusboard_agenda_relative_days" name="statusboard_agenda_relative_days" min="0" max="7" step="1"
+                        value="{{ config.get('statusboard', {}).get('agenda_relative_days',2) }}">
+                </div>
+                <div class="form-group">
+                    <label for="statusboard_agenda_weekday_format">Weekday format (next 7 days after relative labels)</label>
+                    <input type="text" id="statusboard_agenda_weekday_format" name="statusboard_agenda_weekday_format"
+                        value="{{ config.get('statusboard', {}).get('agenda_weekday_format','dddd') }}">
+                    <div class="small-text">Arrow format, e.g. dddd (Monday) or ddd (Mon).</div>
+                </div>
+                <div class="form-group">
+                    <label for="statusboard_agenda_date_format">Date format (after next 7 days)</label>
+                    <input type="text" id="statusboard_agenda_date_format" name="statusboard_agenda_date_format"
+                        value="{{ config.get('statusboard', {}).get('agenda_date_format','DD.MM.YYYY') }}">
+                    <div class="small-text">Arrow format, e.g. DD.MM.YYYY.</div>
+                </div>
+            </div>
+
+            <div class="card section-statusboard">
+                <h2 class="card-title">Info Settings</h2>
+                <div class="form-group">
+                    <label for="statusboard_last_updated_format">Last Updated Format</label>
+                    <input type="text" id="statusboard_last_updated_format" name="statusboard_last_updated_format"
+                        value="{{ config.get('statusboard', {}).get('last_updated_format','HH:mm') }}">
+                    <div class="small-text">Arrow format, e.g. HH:mm</div>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="statusboard_show_last_updated" name="statusboard_show_last_updated"
+                        {% if config.get('statusboard', {}).get('show_last_updated', True) %}checked{% endif %}> Show last updated</label>
+                </div>
+                <div class="form-group dwd-only-setting">
+                    <label><input type="checkbox" id="statusboard_show_weather_fallback_info" name="statusboard_show_weather_fallback_info"
+                        {% if config.get('statusboard', {}).get('show_weather_fallback_info', True) %}checked{% endif %}> Show weather source fallback info (DWD only)</label>
+                </div>
+                <div class="form-group">
+                    <label for="statusboard_battery_show_below">Show Battery Below (%)</label>
+                    <input type="number" id="statusboard_battery_show_below" name="statusboard_battery_show_below" min="0" max="100"
+                        value="{{ config.get('statusboard', {}).get('battery_show_below',20) }}">
+                </div>
+            </div>
+
+            <div class="button-group">
+                <input type="submit" value="Save Configuration">
+                <button type="button" class="reset-btn" onclick="showResetConfirmation()">Reset to Default</button>
+            </div>
+        </form>
+
+    </div>
+
+    <div id="confirmModal" class="confirm-modal">
+        <div class="confirm-content">
+            <h2>Reset to Default Settings</h2>
+            <p>Are you sure you want to reset all settings to default?</p>
+            <button onclick="confirmReset()">Confirm</button>
+            <button onclick="cancelReset()" class="reset-btn">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        function setMode(mode) {
+            document.getElementById('mode').value = mode;
+            const isStatus = mode === 'statusboard';
+            document.querySelectorAll('.section-statusboard').forEach(el => el.style.display = isStatus ? 'block' : 'none');
+            document.querySelectorAll('.section-immich').forEach(el => el.style.display = isStatus ? 'none' : 'block');
+            document.getElementById('btnStatus').style.background = isStatus ? '#3F37C9' : '#f8f9fa';
+            document.getElementById('btnStatus').style.color = isStatus ? 'white' : '#2b2d42';
+            document.getElementById('btnImmich').style.background = !isStatus ? '#3F37C9' : '#f8f9fa';
+            document.getElementById('btnImmich').style.color = !isStatus ? 'white' : '#2b2d42';
+        }
+
+        function addRow() {
+            const tbody = document.getElementById('calendarRows');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td style="padding:6px;"><input type="text" name="calendar_name[]" value=""></td>
+                <td style="padding:6px;"><input type="text" name="calendar_url[]" value=""></td>
+                <td style="padding:6px;">
+                    <select name="calendar_color[]">
+                        <option value="black">black</option>
+                        <option value="red">red</option>
+                        <option value="blue">blue</option>
+                        <option value="green">green</option>
+                        <option value="yellow">yellow</option>
+                        <option value="orange">orange</option>
+                        <option value="gray">gray</option>
+                        <option value="meals">meals</option>
+                    </select>
+                </td>
+                <td style="padding:6px;"><button type="button" class="reset-btn" onclick="removeRow(this)">-</button></td>
+            `;
+            tbody.appendChild(row);
+        }
+
+        function removeRow(btn) {
+            const row = btn.closest('tr');
+            if (row) row.remove();
+        }
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 300);
+            }, 3000);
+        }
+
+        function updateSliderValue(slider) {
+            const value = parseFloat(slider.value);
+            const output = slider.nextElementSibling;
+            output.textContent = value.toFixed(1);
+        }
+
+        function updateWeatherProviderVisibility() {
+            const provider = document.getElementById('weather_provider')?.value || 'owm';
+            const showDwdOnly = provider === 'dwd';
+            document.querySelectorAll('.dwd-only-setting').forEach(el => {
+                el.style.display = showDwdOnly ? 'block' : 'none';
+            });
+        }
+
+        function updatePrecipMaxFieldState() {
+            const auto = document.getElementById('statusboard_diagram_auto_precip_max')?.checked ?? true;
+            const input = document.getElementById('statusboard_max_precip_mm');
+            if (!input) return;
+            input.disabled = auto;
+            input.style.opacity = auto ? '0.5' : '1.0';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update battery level visualization
+            const batteryPercentage = {{ battery_percentage|default(0) }};
+            const batteryLevel = document.getElementById('batteryLevel');
+
+            if (batteryPercentage > 0) {
+                batteryLevel.style.width = batteryPercentage + '%';
+                batteryLevel.className = 'battery-level';
+            }
+            setMode(document.getElementById('mode').value || 'statusboard');
+            updateWeatherProviderVisibility();
+            const providerSelect = document.getElementById('weather_provider');
+            if (providerSelect) {
+                providerSelect.addEventListener('change', updateWeatherProviderVisibility);
+            }
+            const autoPrecip = document.getElementById('statusboard_diagram_auto_precip_max');
+            if (autoPrecip) {
+                autoPrecip.addEventListener('change', updatePrecipMaxFieldState);
+            }
+            updatePrecipMaxFieldState();
+        });
+
+        function showResetConfirmation() {
+            document.getElementById('confirmModal').style.display = 'flex';
+        }
+
+        function confirmReset() {
+            // Reset settings to default
+            document.getElementById('url').value = 'http://localhost';
+            document.getElementById('album').value = 'default_album';
+            document.getElementById('rotation').selectedIndex = 0;
+            document.getElementById('display_mode').selectedIndex = 0;
+            document.getElementById('image_order').selectedIndex = 0;
+
+            const sliders = [
+                { id: 'enhanced', defaultValue: 1.0 },
+                { id: 'contrast', defaultValue: 1.0 },
+                { id: 'strength', defaultValue: 0.8 }
+            ];
+
+            sliders.forEach(slider => {
+                const sliderElement = document.getElementById(slider.id);
+                const outputElement = sliderElement.nextElementSibling;
+                sliderElement.value = slider.defaultValue;
+                outputElement.textContent = slider.defaultValue.toFixed(1);
+            });
+
+            document.getElementById('sleep_start_hour').value = '23';
+            document.getElementById('sleep_start_minute').value = '0';
+            document.getElementById('sleep_end_hour').value = '6';
+            document.getElementById('sleep_end_minute').value = '0';
+            document.getElementById('wakeup_interval').value = '30';
+
+            showNotification('Settings reset to default successfully!');
+            document.getElementById('confirmModal').style.display = 'none';
+        }
+
+        function cancelReset() {
+            document.getElementById('confirmModal').style.display = 'none';
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            // Submit the form using fetch
+            fetch(window.location.href, {
+                method: 'POST',
+                body: new FormData(document.getElementById('settingsForm'))
+            })
+                .then(response => {
+                    if (response.ok) {
+                        showNotification('Settings saved successfully!');
+                        return;
+                    }
+                    throw new Error('Failed to save settings');
+                })
+                .catch(error => {
+                    showNotification('Error: ' + error.message);
+                });
+        }
+
+        document.getElementById('btnStatus').addEventListener('click', () => setMode('statusboard'));
+        document.getElementById('btnImmich').addEventListener('click', () => setMode('immich'));
+    </script>
+</body>
+
+</html>
