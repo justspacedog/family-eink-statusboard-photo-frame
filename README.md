@@ -3,39 +3,34 @@
 
 An e-ink family statusboard for a 7.3" Spectra 6 panel.
 
-I originally tested a immmich photo frame (EPF e-paper frame (https://github.com/jwchen119/EPF)), but my wife did not like photos on this e-ink display, so this project focuses on a practical statusboard view (weather, calendar, agenda, battery, and refresh info) while keeping the immmich function as a backup.
+I originally tested an immmich photo frame (EPF e-paper frame (https://github.com/jwchen119/EPF)), but my wife did not like photos on this e-ink display, so this project focuses on a practical statusboard view (weather, calendar, agenda) while keeping the immmich function as a backup.
 
 ## What It Does
+1. The `frame-server` runs a Flask app with:
+   - a web settings UI (`/setting`)
+   - control/status endpoints (`/download`, `/sleep`, `/mode`, `/battery`).
 
-- Renders a full dashboard image for a 480x800 e-ink panel:
-  - localized header/date
-  - current weather summary
-  - multi-day weather diagram (temperature + precipitation)
-  - monthly calendar with event markers
-  - agenda list with relative day labels
-  - footer status (last refresh, battery)
-- Supports two weather providers:
-  - OpenWeatherMap (OWM)
-  - Deutscher Wetterdienst (DWD, over BrightSky API)
-- OWM mode requires an OpenWeatherMap API key. DWD mode works without an OWM key.
-- In DWD mode, warning handling is sourced from DWD/BrightSky data.
-- In DWD mode, sunrise/sunset default to local solar calculation (stable daily values) using the National Oceanic and Atmospheric Administration (NOAA) solar algorithm.
-  - This is computed locally in code from latitude/longitude/date (no NOAA API/network call).
-  - Optional setting: use OWM sunrise/sunset instead.
-- DWD warnings can show multiple alert markers at once:
-  - at most one marker per parameter (`min`, `max`, `precip`, `wind`)
-  - plus one fallback marker next to current temperature when warnings are not classifiable
-- Weather diagram supports automatic precipitation Y-axis scaling (default on), with optional manual max override.
-- Weather diagram supports configurable time windows:
-  - next N hours (default 72h)
-  - optionally include already passed hours
-- Weather summary scopes are configurable per metric (default: current day, matching Bright Sky demo behavior).
-- Exposes HTTP endpoints for the frame and Home Assistant:
-  - `/download`
-  - `/battery` (GET/POST)
-  - `/mode` (GET/POST)
-  - `/sleep`
-  - `/setting`
+2. The frame periodically calls `/download`.
+   - Depending on the selected mode (`statusboard` or `immich`), the server generates the next image payload.
+
+3. In `statusboard` mode, the server fetches:
+   - weather data from OpenWeatherMap (OWM) or Deutscher Wetterdienst (DWD, over BrightSky API)
+   - calendar feeds (ICS),
+   - optional warning data (DWD alerts).
+
+4. Calendar and agenda are rendered with different logic:
+   - **Calendar**: monthly grid with marker symbols (event, recurring, all-day, meals).
+   - **Agenda**: grouped day list with configurable labels (relative names, weekday format, date format).
+   - All-day and meal events stay visible for the full day; regular timed events disappear after they end.
+
+5. Weather summary behavior is configurable per metric:
+   - per-day (default) or next 24h scopes for min/max, precipitation probability, precipitation amount, wind, and sunshine.
+   - In DWD mode, sunrise/sunset times are calculared local with the [National Oceanic and Atmospheric Administration (NOAA) solar algorithm](https://gml.noaa.gov/grad/solcalc/calcdetails.html), with an optional OWM override (API Key needed then).
+
+6. The weather chart is generated with Matplotlib (temperature + precipitation), then combined with the rest of the layout using Pillow.
+
+7. The final image is converted to EPF-compatible output (`image.c`) and returned to the frame.
+   - Home Assistant can control and monitor the system via `/mode`, `/battery`, and `/sleep`.
 
 ## How It Works
 
@@ -102,81 +97,7 @@ services:
       - IMMICH_API_KEY=your_immich_api_key
     volumes:
       - ./frame-server/app:/app
-      - ./frame-server/config.yaml:/config/config.yaml
-```
-
-## Example `config.yaml`
-
-```yaml
-mode: statusboard
-
-calendar:
-  feeds:
-    - name: Family
-      url: https://example.com/family.ics
-      color: yellow
-
-weather:
-  api_key: your_openweathermap_key
-  provider: dwd   # dwd or owm
-  latitude: 53.08
-  longitude: 8.81
-  temp_unit: celsius
-
-statusboard:
-  rotation: 0
-  dither_strength: 0.8
-  padding_left: 5
-  padding_right: 5
-  padding_top: 5
-  padding_bottom: 0
-  language: de
-  show_current_temp: true
-  show_suntime: true
-  show_dwd_warnings: true
-  dwd_use_owm_sun_times: false
-  color_conditions: true
-  summary_scope_temp: day
-  summary_scope_precip_prob: day
-  summary_scope_precip_rate: day
-  summary_scope_wind: day
-  summary_scope_sunshine: day
-  max_precip_mm: 6.0
-  diagram_auto_precip_max: true
-  diagram_display_hours: 72
-  diagram_include_past_hours: false
-  diagram_locale: true
-  diagram_night_shading: true
-  diagram_hour_markers: true
-  battery_show_below: 20
-  month_label_first_day: true
-  calendar_show_moon: true
-  agenda_relative_days: 2
-  agenda_weekday_format: dddd
-  agenda_date_format: DD.MM.YYYY
-  title_format: dddd, D. MMMM
-  last_updated_format: HH:mm
-  show_last_updated: true
-  show_weather_fallback_info: true
-  show_dwd_warning_near_value: true
-
-display:
-  mode: fill
-
-immich:
-  url: http://immich:2283
-  album: YOUR_ALBUM_NAME
-  rotation: 270
-  enhanced: 1.5
-  contrast: 1.0
-  strength: 0.8
-  display_mode: fill
-  image_order: random
-  sleep_start_hour: 23
-  sleep_start_minute: 0
-  sleep_end_hour: 6
-  sleep_end_minute: 0
-  wakeup_interval: 60
+      - ./frame-server/config.yaml:/config/config.yaml # not really needed to link outside, as it is generated with the settings.html
 ```
 
 ## Home Assistant Integration
