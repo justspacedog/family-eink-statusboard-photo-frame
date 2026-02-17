@@ -3,7 +3,7 @@
 
 An e-ink family statusboard for a 7.3" Spectra 6 panel.
 
-I originally tested an immmich photo frame (EPF e-paper frame (https://github.com/jwchen119/EPF)), but my wife did not like photos on this e-ink display, so this project focuses on a practical statusboard view (weather, calendar, agenda) while keeping the immmich function as a backup.
+I originally tested an [immmich photo frame](https://github.com/jwchen119/EPF), but my wife did not like photos on this e-ink display, so this project focuses on a practical statusboard view (weather, calendar, agenda) while keeping the immmich function as a backup.
 
 ## What It Does
 - Turns a 7.3" Spectra 6 e-ink frame into a family dashboard with two modes:
