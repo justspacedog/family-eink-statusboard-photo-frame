@@ -59,7 +59,7 @@ I originally tested an immmich photo frame (EPF e-paper frame (https://github.co
 | 2x | Cables for button (e.g. Dupont) | short jumper wires |
 | 2-4x | M3 screws, 8 mm (or shorter) | for HAT to 3D print |
 | 4x | M4 screws, 14 mm (or shorter) | for upper panel to bottom panel |
-| 1x set | 3D prints from EPF CAD (`bottom_panel.STEP`, `display_card.STEP`) | print `display_card` in white for passepartout effect |
+| 1x set | 3D prints from /CAD | print `display_card.STEP` and `bottom_panel.STEP` in white for passepartout effect |
 | 1x | 6x8 inch frame (8x10 outer), e.g. [BGA Store](https://www.bgastore.de/rahmen-edsbyn-acrylglas-eiche-8x10-inches-20-32x25-4-cm) | 6x8 is less common in Germany |
 | 1x | Soldering iron + glue | assembly |
 | optional | USB-C magnetic cable | easier charging/access |
