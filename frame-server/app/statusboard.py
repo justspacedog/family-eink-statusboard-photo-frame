@@ -453,7 +453,9 @@ def _flatten_warning_dict(data: Dict) -> List[Dict]:
 def _get_dwd_warnings(lat: float, lon: float, station_name: Optional[str] = None, tzname: str = "Europe/Berlin") -> List[Dict]:
     base = "https://api.brightsky.dev"
     headers = {"Accept": "application/json", "User-Agent": "statusboard/1.0"}
-    # Primary source per Bright Sky docs: /alerts
+    # Primary source per Bright Sky docs: /alerts.
+    # If Bright Sky location endpoints answer, trust that response (even if empty)
+    # so we do not fall back to Germany-wide feeds.
     for path in ("alerts", "warnings"):
         for params in (
             {"lat": lat, "lon": lon, "tz": tzname},
@@ -464,11 +466,10 @@ def _get_dwd_warnings(lat: float, lon: float, station_name: Optional[str] = None
                 if r.status_code == 200:
                     data = r.json()
                     if isinstance(data, list):
-                        return data
+                        return [x for x in data if isinstance(x, dict)]
                     if isinstance(data, dict):
                         parsed = _flatten_warning_dict(data)
-                        if parsed:
-                            return parsed
+                        return parsed
             except Exception:
                 pass
     # Fallback to official DWD warning feed.
@@ -502,9 +503,9 @@ def _get_dwd_warnings(lat: float, lon: float, station_name: Optional[str] = None
                     continue
                 if any(p in hay for p in token_parts):
                     filtered.append(w)
-            if filtered:
-                return filtered
-        return warnings
+            return filtered
+        # No reliable location mapping available for fallback feed.
+        return []
     except Exception:
         return []
 
@@ -608,8 +609,12 @@ def _warning_focus_metric(w: Optional[Dict]) -> Optional[str]:
     tokens = set(re.findall(r"[a-zA-Zäöüß]+", text))
 
     # Match wind only on full words to avoid false positives like "windward".
-    wind_words = {"wind", "sturm", "boe", "böe", "böen", "gust", "gusts"}
-    if tokens & wind_words:
+    wind_words = {"wind", "sturm", "sturmböe", "sturmböen", "boe", "böe", "böen", "gust", "gusts", "orkan"}
+    if any(
+        (t in wind_words or t.startswith(("sturm", "orkan", "windboe", "windbö")))
+        and t != "windward"
+        for t in tokens
+    ):
         return "wind"
     if any(k in text for k in ("regen", "rain", "niederschlag", "schnee", "snow", "hail", "hagel", "precip")):
         return "precip"
@@ -617,8 +622,7 @@ def _warning_focus_metric(w: Optional[Dict]) -> Optional[str]:
         return "min_temp"
     if any(k in text for k in ("hitze", "heat", "heiss", "heiß", "hot")):
         return "max_temp"
-    # Default to precipitation-related focus for generic weather warnings.
-    return "precip"
+    return None
 
 
 def _draw_alert_icon(draw: ImageDraw.ImageDraw, x: int, y: int, size: int, color):
